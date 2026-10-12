@@ -93,7 +93,8 @@ class _AsyncBridge:
 
 def is_tunneld_running(address: tuple[str, int] = TUNNELD_DEFAULT_ADDRESS) -> bool:
     try:
-        requests.get(f"http://{address[0]}:{address[1]}", timeout=2)
+        # tunneld exposes a loopback-only HTTP health endpoint; it does not support TLS.
+        requests.get(f"http://{address[0]}:{address[1]}", timeout=2)  # nosemgrep: python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
         return True
     except requests.exceptions.RequestException:
         return False
